@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPA Installer</title>
+<style>
+body {
+  background: #101114;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 70px 20px;
+}
+.container {
+  max-width: 380px;
+  margin: auto;
+  background: #202127;
+  padding: 30px 20px;
+  border-radius: 18px;
+}
+button {
+  background: #1685ff;
+  color: white;
+  border: 0;
+  border-radius: 12px;
+  padding: 15px 35px;
+  font-size: 18px;
+  width: 100%;
+  margin-top: 20px;
+}
+p { color: #bbb; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>IPA Installer</h2>
+  <p id="status">Your app is ready to install.</p>
+  <button id="install" onclick="installApp()">Install</button>
+</div>
+
+<script>
+function installApp() {
+  const params = new URLSearchParams(window.location.search);
+  const manifest = params.get("m");
+
+  if (!manifest || !manifest.startsWith("https://")) {
+    document.getElementById("status").textContent =
+      "Install link is not ready yet.";
+    return;
+  }
+
+  window.location.href =
+    "itms-services://?action=download-manifest&url=" +
+    encodeURIComponent(manifest);
+}
+</script>
+</body>
+</html>
