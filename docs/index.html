@@ -20,15 +20,21 @@ body {
   padding: 30px 20px;
   border-radius: 18px;
 }
-button {
+.install-button {
+  display: block;
+  box-sizing: border-box;
   background: #1685ff;
   color: white;
-  border: 0;
+  text-decoration: none;
   border-radius: 12px;
   padding: 15px 35px;
   font-size: 18px;
   width: 100%;
   margin-top: 20px;
+}
+.install-button[aria-disabled="true"] {
+  opacity: .5;
+  pointer-events: none;
 }
 p { color: #bbb; }
 </style>
@@ -37,24 +43,29 @@ p { color: #bbb; }
 <div class="container">
   <h2>IPA Installer</h2>
   <p id="status">Your app is ready to install.</p>
-  <button id="install" onclick="installApp()">Install</button>
+  <a id="install" class="install-button" href="#">Install</a>
 </div>
 
 <script>
-function installApp() {
+(() => {
   const params = new URLSearchParams(window.location.search);
   const manifest = params.get("m");
+  const button = document.getElementById("install");
+  const status = document.getElementById("status");
 
-  if (!manifest || !manifest.startsWith("https://")) {
-    document.getElementById("status").textContent =
-      "Install link is not ready yet.";
+  if (!manifest || !/^https:\\/\\//i.test(manifest)) {
+    status.textContent = "Install link is invalid or missing.";
+    button.removeAttribute("href");
+    button.setAttribute("aria-disabled", "true");
     return;
   }
 
-  window.location.href =
+  // Set a real itms-services link before the user taps. This avoids
+  // relying on a JavaScript redirect during the tap gesture on iOS.
+  button.href =
     "itms-services://?action=download-manifest&url=" +
     encodeURIComponent(manifest);
-}
+})();
 </script>
 </body>
 </html>
