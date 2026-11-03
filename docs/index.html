@@ -53,7 +53,7 @@ p { color: #bbb; }
   const button = document.getElementById("install");
   const status = document.getElementById("status");
 
-  if (!manifest || !/^https:\\/\\//i.test(manifest)) {
+  if (!manifest || !manifest.startsWith("https://")) {
     status.textContent = "Install link is invalid or missing.";
     button.removeAttribute("href");
     button.setAttribute("aria-disabled", "true");
